@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 import 'package:thecalculatorapp/mybutton.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -11,7 +12,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final buttonList = [
+  final button = [
     'C',
     'DEL',
     '%',
@@ -42,64 +43,102 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: <Widget>[
           Expanded(
-              child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                const SizedBox(height: 50),
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Question',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              const SizedBox(height: 50),
+              Container(
+                padding: const EdgeInsets.all(24),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  question,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w800),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  alignment: Alignment.centerRight,
-                  child: const Text('Answer',
-                      style: TextStyle(color: Colors.white, fontSize: 20)),
-                )
-              ],
-            ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(24),
+                alignment: Alignment.centerRight,
+                child: Text(answer,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800)),
+              )
+            ],
           )),
           Expanded(
               flex: 2,
               child: GridView.builder(
-                  itemCount: buttonList.length,
+                  itemCount: button.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4),
                   itemBuilder: (BuildContext context, int index) {
+                    //Clear button action
                     if (index == 0) {
                       return MyButton(
                         buttonColor: Colors.green,
-                        buttonTitle: buttonList[index],
+                        buttonTitle: button[index],
                         buttonTitleColor: Colors.white,
-                        buttonTapped: () {},
-                      );
-                    } else if (index == 1) {
-                      return MyButton(
-                        buttonColor: Colors.red,
-                        buttonTitle: buttonList[index],
-                        buttonTitleColor: Colors.white,
-                        buttonTapped: () {},
-                      );
-                    } else {
-                      return MyButton(
-                        buttonColor: isOperator(buttonList[index])
-                            ? Colors.black
-                            : const Color.fromARGB(255, 40, 36, 36),
-                        buttonTitle: buttonList[index],
-                        buttonTitleColor: isOperator(buttonList[index])
-                            ? Colors.white
-                            : Colors.deepPurple,
                         buttonTapped: () {
+                          print("Dele");
                           setState(() {
-                            // question += buttonList[index];
-                            log("Tapped");
+                            question = '';
+                            answer = '';
                           });
                         },
+                      );
+                    }
+                    //Delete button action
+                    else if (index == 1) {
+                      return MyButton(
+                        buttonColor: Colors.red,
+                        buttonTitle: button[index],
+                        buttonTitleColor: Colors.white,
+                        buttonTapped: () {
+                          setState(() {
+                            if (question.length <= 0) {
+                              return;
+                            } else {
+                              question =
+                                  question.substring(0, question.length - 1);
+                            }
+                          });
+                        },
+                      );
+                    } else if (index == button.length - 1) {
+                      return MyButton(
+                        buttonTapped: () {
+                          setState(() {
+                            equalOperation();
+                          });
+                        },
+                        buttonColor: isOperator(button[index])
+                            ? Colors.black
+                            : const Color.fromARGB(255, 40, 36, 36),
+                        buttonTitle: button[index],
+                        buttonTitleColor: isOperator(button[index])
+                            ? Colors.white
+                            : Colors.deepPurple,
+                      );
+                    }
+                    //Rest of buttons
+                    else {
+                      return MyButton(
+                        buttonTapped: () {
+                          setState(() {
+                            question += button[index];
+                          });
+                        },
+                        buttonColor: isOperator(button[index])
+                            ? Colors.black
+                            : const Color.fromARGB(255, 40, 36, 36),
+                        buttonTitle: button[index],
+                        buttonTitleColor: isOperator(button[index])
+                            ? Colors.white
+                            : Colors.deepPurple,
                       );
                     }
                   }))
@@ -113,5 +152,16 @@ class _MyHomePageState extends State<MyHomePage> {
       return true;
     }
     return false;
+  }
+
+  void equalOperation() {
+    String finalQuestions = question;
+    finalQuestions = finalQuestions.replaceAll("X", "*");
+    Parser p = Parser();
+    Expression exp = p.parse(finalQuestions);
+    ContextModel cm = ContextModel();
+    double eval = exp.evaluate(EvaluationType.REAL, cm);
+    answer = '= $eval';
+    // print('Expression: $exp');
   }
 }
