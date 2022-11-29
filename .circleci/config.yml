@@ -17,10 +17,11 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
-          
+
   app-engineer:
-   docker:
-    - image: cimg/base:stable
+    docker:
+      - image: cimg/base:stable
+
     steps:
       - checkout
       - run:
@@ -31,8 +32,7 @@ jobs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   myworkflows:
-  jobs:
-    - say-hello
-    - app-engineer
+    jobs:
+      - say-hello
+      - app-engineer
 # //customization of yml file
-
