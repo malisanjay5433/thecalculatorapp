@@ -37,7 +37,7 @@ workflows:
   #   jobs1:
   #     - say-hello
   say-app-engineer-workflow:
-    jobs2:
+    job:
       - app-engineer
 # //customization of yml file
 
