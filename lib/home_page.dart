@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:thecalculatorapp/mybutton.dart';
@@ -83,7 +81,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         buttonTitle: button[index],
                         buttonTitleColor: Colors.white,
                         buttonTapped: () {
-                          print("Dele");
                           setState(() {
                             question = '';
                             answer = '';
@@ -99,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         buttonTitleColor: Colors.white,
                         buttonTapped: () {
                           setState(() {
-                            if (question.length <= 0) {
+                            if (question.isEmpty) {
                               return;
                             } else {
                               question =
@@ -162,6 +159,5 @@ class _MyHomePageState extends State<MyHomePage> {
     ContextModel cm = ContextModel();
     double eval = exp.evaluate(EvaluationType.REAL, cm);
     answer = '= $eval';
-    // print('Expression: $exp');
   }
 }

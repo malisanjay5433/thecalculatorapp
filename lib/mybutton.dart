@@ -1,10 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/cupertino.dart';
 
 class MyButton extends StatelessWidget {
   final Color buttonColor;
   final Color buttonTitleColor;
   final String buttonTitle;
+  // ignore: prefer_typing_uninitialized_variables
   final buttonTapped;
   const MyButton({
     Key? key,
@@ -13,7 +13,6 @@ class MyButton extends StatelessWidget {
     required this.buttonTitle,
     this.buttonTapped,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
